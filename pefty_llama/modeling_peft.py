@@ -719,6 +719,11 @@ def create_model(model_name, hf_path, peft_config: peft.PeftConfig, use_8bit=Fal
             for k, v in loaded.items():
                 set_module_8bit_tensor_to_device(model, tensor_name=k, device=device, value=v)
                 state_keys.remove(k)
+        
+        for k in list(state_keys):
+          if "peft_" in k: 
+            set_module_8bit_tensor_to_device(model, tensor_name=k, device=device,value=model.state_dict()[k])
+            state_keys.remove(k)
         assert not state_keys
     else:
         # noinspection PyUnresolvedReferences
@@ -731,6 +736,9 @@ def create_model(model_name, hf_path, peft_config: peft.PeftConfig, use_8bit=Fal
             model.load_state_dict(loaded, strict=False)
             for k in loaded:
                 state_keys.remove(k)
+    for name, param in model.named_parameters():
+        if "peft_" in name: continue
+        param.requires_grad = False
     return model
 
 

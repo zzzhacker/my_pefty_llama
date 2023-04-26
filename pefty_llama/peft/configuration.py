@@ -36,5 +36,5 @@ class PeftConfig:
         assert self.peft_mode in (
             PEFT_PREFIX, PEFT_PREFIX_ADAPTER, PEFT_PROMPT, PEFT_ADAPTER,
             PEFT_IA3, PEFT_BITFIT,
-            NO_PEFT,
+            NO_PEFT,PEFT_LORA
         )
